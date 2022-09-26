@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Promise 应用</title>
+</head>
+
+<body>
+  <h1>ES6 —— Promise 应用</h1>
+  <script>
+    // 为什么会有 Promise
+    // run(0)
+    // setTimeout(() => {
+    //   run(1)
+    //   setTimeout(() => {
+    //     run(2)
+    //   }, 500)
+    // }, 1000)
+
+    // 回调函数是优秀的设计，但是回调地狱令人困惑
+
+    // 概念 + 用法
+    // Promise => 承诺，异步
+    let isRemember = true
+    let getGift = new Promise((resolve, reject) => {
+      if (isRemember) {
+        let gift = {
+          color: 'orange',
+          price: '$99'
+        }
+        resolve(gift)
+      } else {
+        let err = new Error("抱歉！")
+        reject(err)
+      }
+    })
+
+    // let testFn = function () {
+    //   getGift.then((fulfilled) => {
+    //     console.log(fulfilled)
+    //   }).catch((rejected) => {
+    //     console.log(rejected.message)
+    //   })
+    // }
+    // testFn()
+
+    let buyLip = (gift) => {
+      let lip = {
+        brand: ' Chanel',
+        color: 'red'
+      }
+      let msg = {
+        message: '我买的口红是' + lip.brand + '搭配我的' + gift.color,
+        lip: lip,
+        gift: gift
+      }
+      return Promise.resolve(msg)
+    }
+
+    let testFn2 = () => {
+      getGift
+        .then(buyLip)
+        .then((fulfilled) => {
+          console.log(fulfilled)
+        }).catch((rejected) => {
+          console.log(rejected.message)
+        })
+    }
+    testFn2()
+  </script>
+</body>
+
+</html>
