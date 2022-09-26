@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <input type="text" id="username">
+  <br>
+  显示值：<span id="uName"></span>
+  <script>
+    let obj = {}
+    // 方法
+    Object.defineProperty(obj, "username", {
+      get: function () {
+        console.log("取值")
+      },
+      set: function (val) {
+        console.log("设置值")
+        document.getElementById("uName").innerText = val
+      }
+    })
+    document.getElementById("username").addEventListener("keyup", function () {
+      console.log('事件', event)
+      obj.username = event.target.value
+    })
+  </script>
+</body>
+
+</html>

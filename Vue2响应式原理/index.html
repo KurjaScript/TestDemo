@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <div id="app">
+    订阅视图-1: <span class="box-1"></span>
+    订阅视图-2: <span class="box-2"></span>
+  </div>
+</body>
+<script src="./index.js"></script>
+<script>
+  let dataObj = {}
+
+  dataHijack({
+    data: dataObj,
+    target: 'view-1',
+    dataKey: 'one',
+    selector: '.box-1'
+  })
+
+  dataHijack({
+    data: dataObj,
+    target: 'view-2',
+    dataKey: 'two',
+    selector: '.box-2'
+  })
+  dataObj.one = "Ku"
+  dataObj.two = "rja"
+</script>
+
+</html>
