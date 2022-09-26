@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>添加 Promise 链式调用</title>
+</head>
+
+<body>
+  <h1>ES6 —— 手写一个 Promise</h1>
+  <script>
+    function myPromise (excutor) {
+      // 1. 执行结构
+      let self = this
+      self.status = 'pending' // 状态
+      self.value = null // 成功的结果
+      self.reason = null // 失败的原因
+
+      // 添加缓存数组
+      self.onFulfilledCallbacks = []
+      self.onRejectedCallbacks = []
+
+      // 4. 判断状态，做相应处理
+      // 成功
+      function resolve (value) {
+        if (self.status === 'pending') {
+          self.value = value // 保存成功结果
+          self.status = 'fulfilled'
+
+          // 10.状态改变，依次取出
+          self.onFulfilledCallbacks.forEach(item => item(value))
+        }
+      }
+
+      // 失败
+      function reject (reason) {
+        if (self.status === 'pending') {
+          self.value = reason // 保存失败原因
+          self.status = 'rejected'
+          // 10. 状态改变，依次取出
+          self.onRejectedCallbacks.forEach(item => item(reason))
+        }
+      }
+
+      try {
+        // 3. 执行一遍
+        excutor(resolve, reject)
+      } catch (err) {
+        reject(err)
+      }
+    }
+
+    // 2. then
+    myPromise.prototype.then = function (onFulfilled, onRejected) {
+      // 5. 状态改变 => 调用 then()
+      onFulfilled = typeof onFulfilled === 'function' ?
+        onFulfilled : function (data) { resolve(data) }
+      onRejected = typeof onRejected === 'function' ?
+        onRejected : function (err) { throw err }
+
+      let self = this
+      // 9. 先添加进去
+      // if (self.status === 'pending') {
+      //   self.onFulfilledCallbacks.push(onFulfilled)
+      //   self.onRejectedCallbacks.push(onRejected)
+      // }
+
+      if (self.status === 'fulfilled') {
+        return new myPromise((resolve, reject) => {
+          try {
+            let x = onFulfilled(self.value)
+            // 判断传进来的 value 是否是 Promise，如果是 Promise，执行 .then, 如果不是 Promise，则返回 resolve(x)
+            x instanceof myPromise ? x.then(resolve, reject) : resolve(x)
+          } catch (err) {
+            reject(err)
+          }
+        })
+      }
+
+      if (self.status === 'rejected') {
+        return new myPromise((resolve, reject) => {
+          try {
+            let x = onRejected(self.value)
+            // 判断传进来的 value 是否是 Promise，如果是 Promise，执行 .then, 如果不是 Promise，则返回 resolve(x)
+            x instanceof myPromise ? x.then(resolve, reject) : resolve(x)
+          } catch (err) {
+            reject(err)
+          }
+        })
+      }
+
+      if (self.status === 'pending') {
+        return new myPromise((resolve, reject) => {
+          self.onFulfilledCallbacks.push(() => {
+            let x = onFulfilledCallbacks.push(() => {
+              let x = onFulfilled(self.reason)
+              x instanceof myPromise ? x.then(resolve, reject) : resolve(x)
+            })
+            self.onRejectedCallbacks.push(() => {
+              let x = onRejected(self.reason)
+              x instanceof myPromise ? x.then(resolve, reject) : resolve(x)
+            })
+          })
+        })
+      }
+    }
+
+    myPromise.prototype.catch = function (fn) {
+      return this.then(null, fn)
+    }
+
+    // let demo = new myPromise((resolve, reject) => {
+    //   console.log('这行信息没有打印')
+    //   // 6. 尝试异步
+    //   setTimeout(() => {
+    //     resolve(11)
+    //   }, 5000)
+    // })
+
+    // 7. 异步失败
+    // demo.then(data => console.log(data))
+
+    let isRemember = true
+    let getGift = new myPromise((resolve, reject) => {
+      if (isRemember) {
+        let gift = {
+          color: 'orange',
+          price: '$99'
+        }
+        resolve(gift)
+      } else {
+        let err = new Error("抱歉！")
+        reject(err)
+      }
+    })
+
+    // let testFn = function () {
+    //   getGift.then((fulfilled) => {
+    //     console.log(fulfilled)
+    //   }).catch((rejected) => {
+    //     console.log(rejected.message)
+    //   })
+    // }
+    // testFn()
+
+    let buyLip = (gift) => {
+      let lip = {
+        brand: ' Chanel',
+        color: 'red'
+      }
+      let msg = {
+        message: '我买的口红是' + lip.brand + '搭配我的' + gift.color,
+        lip: lip,
+        gift: gift
+      }
+      return new myPromise(function (y, n) {
+        y(msg)
+      })
+    }
+
+    let testFn2 = () => {
+      getGift
+        .then(buyLip)
+        .then((fulfilled) => {
+          console.log(fulfilled)
+        }).catch((rejected) => {
+          console.log(rejected.message)
+        })
+    }
+    testFn2()
+  </script>
+</body>
+
+</html>
