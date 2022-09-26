@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>手写一个 Promise</title>
+</head>
+
+<body>
+  <h1>ES6 —— 手写一个 Promise</h1>
+  <script>
+    function myPromise (excutor) {
+      // 1. 执行结构
+      let self = this
+      self.status = 'pending' // 状态
+      self.value = null // 成功的结果
+      self.reason = null // 失败的原因
+
+      // 添加缓存数组
+      self.onFulfilledCallbacks = []
+      self.onRejectedCallbacks = []
+
+      // 4. 判断状态，做相应处理
+      // 成功
+      function resolve (value) {
+        if (self.status === 'pending') {
+          self.value = value // 保存成功结果
+          self.status = 'fulfilled'
+
+          // 10.状态改变，依次取出
+          self.onFulfilledCallbacks.forEach(item => item(value))
+        }
+      }
+
+      // 失败
+      function reject (reason) {
+        if (self.status === 'pending') {
+          self.value = reason // 保存失败原因
+          self.status = 'rejected'
+          // 10. 状态改变，依次取出
+          self.onRejectedCallbacks.forEach(item => item(reason))
+        }
+      }
+
+      try {
+        // 3. 执行一遍
+        excutor(resolve, reject)
+      } catch (err) {
+        reject(err)
+      }
+    }
+
+    // 2. then
+    myPromise.prototype.then = function (onFulfilled, onRejected) {
+      // 5. 状态改变 => 调用 then()
+      onFulfilled = typeof onFulfilled === 'function' ?
+        onFulfilled : function (data) { resolve(data) }
+      onRejected = typeof onRejected === 'function' ?
+        onRejected : function (err) { throw err }
+
+      let self = this
+      // 9. 先添加进去
+      if (self.status === 'pending') {
+        self.onFulfilledCallbacks.push(onFulfilled)
+        self.onRejectedCallbacks.push(onRejected)
+      }
+    }
+
+    let demo = new myPromise((resolve, reject) => {
+      console.log('这行信息没有打印')
+      // 6. 尝试异步
+      setTimeout(() => {
+        resolve(11)
+      }, 5000)
+    })
+
+    // 7. 异步失败
+    demo.then(data => console.log(data))
+  </script>
+</body>
+
+</html>
