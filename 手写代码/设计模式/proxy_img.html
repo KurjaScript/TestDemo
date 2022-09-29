@@ -1,0 +1,26 @@
+<script>
+  // proxy: http://img.lanrentuku.com/img/allimg/1212/5-121204193R0.gif
+  // origin: https://www.baidu.com/img/bd_logo1.png
+  window.onload = function () {
+    // 解决图片懒加载
+    let myImage = (function () { // 创建自执行函数
+      let imgNode = document.createElement('img') // 创建图片节点
+      document.body.appendChild(imgNode) // 把图片节点加入 body
+      let img = new Image() // 代理对象，用来拉取真实图片并先展示等待图片
+      img.onload = function () { // 当真实图片加载完毕后触发
+        // 计时器主要用途是看效果
+        setTimeout(() => {
+          imgNode.src = this.src // 用真实图片把展示的等待图片替换
+        }, 2000)
+      }
+      return { // 返回一个对象
+        setSrc: function (src) {
+          imgNode.src = "http://img.lanrentuku.com/img/allimg/1212/5-121204193R0.gif"
+          img.src = src // 把真实图片给代理对象
+        }
+      }
+    })()
+    // 把真实图片地址给 myImage 对象
+    myImage.setSrc("https://www.baidu.com/img/bd_logo1.png") // 真实图片地址
+  }
+</script>
