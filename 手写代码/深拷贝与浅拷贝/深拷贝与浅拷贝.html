@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>深拷贝</title>
+</head>
+<body>
+    <h1>深拷贝与浅拷贝</h1>
+    <script>
+        // 基本数据类型
+        // 赋值
+        let a = 5
+        let b = a
+        b = 3
+        console.log('赋值', a, b)
+
+        // 数组与对象的赋值叫做浅拷贝
+        let arr1 = [1, 2, 3]
+        let newArr1 = arr1
+        newArr1.push(4)
+        console.log('浅拷贝', arr1, newArr1) // 原数组发生改变
+
+        // 解构赋值是深拷贝还是浅拷贝？
+        // 解构赋值对于一维数组是深拷贝
+        let arr2 = [4, 5, 6]
+        let newArr2 = [...arr2]
+        newArr2.push(7)
+        console.log('解构赋值对于一维数组是深拷贝', arr2, newArr2) // 解构赋值一层数组，是深拷贝
+        // 解构赋值对于多维数组是浅拷贝
+        let arr3 = [[1, 2, 3], [4, 5, 6]]
+        let newArr3 = [...arr3]
+        newArr3[0].push(888)
+        console.log('解构赋值对于多维数组是浅拷贝', arr3, newArr3)
+
+        // 深拷贝常用方法，可以满足大部分使用场景，但是不能拷贝函数
+        let list = [
+            {id: 1, stuName: '小明', class: '五年二班'},
+            {id: 2, stuName: '小红', class: '五年三班'},
+            {id: 3, stuName: '小刚', class: '五年四班'},
+        ]
+        // 现将 JavaScript 值或对象抓换为 JSON 字符串，然后将 JSON 字符串还原为 JavaScript 值或对象
+        let newList = JSON.parse(JSON.stringify(list))
+        newList.push({id: 888})
+        console.log('深拷贝常用方法',list, newList)
+    </script>
+</body>
+</html>
