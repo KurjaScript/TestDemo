@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>手写标准的深拷贝</title>
+</head>
+<body>
+    <script>
+        function deepClone(source) {
+            // [] => Array(基类) {} => Object
+            const targetObj = source.constructor === Array ? [] : {}
+            for (let keys in source) {
+                if (source.hasOwnProperty(keys)) {
+                    // keys => 3 种
+                    // 引用数据类型
+                    if (source[keys] && typeof source[keys] === 'object') {
+                        targetObj[keys] = source[keys].constructor === Array ? [] : {}
+                        // 递归
+                        targetObj[keys] = deepClone(source[keys])
+                    } else {
+                        // 基本数据类型直接赋值
+                        targetObj[keys] = source[keys]
+                    }
+                }
+            }
+            return targetObj
+        }
+
+        let objC = {
+            ff: 'name',
+            gg: 1,
+            obj: {str: '111', age: 12},
+            arr: [1, 2, 3, 4]
+        }
+        let newObjC = deepClone(objC)
+        newObjC.ff = 'Kurja'
+        console.log('手写深拷贝', objC, newObjC)
+    </script>
+</body>
+</html>
