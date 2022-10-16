@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>使用 class 实现继承</title>
+</head>
+<body>
+    <script>
+        // 
+        class Person {
+            constructor(name) {
+                this.name = name
+            }
+
+            drink() {
+                console.log(`${this.name}喝水`)
+            }
+        }
+
+        class Student extends Person{
+            constructor(name, score) {
+                super(name)
+                this.score = score
+            }
+
+            introduce() {
+                console.log(`我是${this.name}, 考了 ${this.score} 分。`)
+            }
+        }
+        const student = new Student('Kurja', 90)
+        console.log('student', student)
+        student.introduce()
+        student.drink()
+
+        class Teacher extends Person {
+            constructor(name, subject) {
+                super(name)
+                this.subject = subject
+            }
+
+            teach() {
+                console.log(`我是${this.name}, 教授${this.subject}。`)
+            }
+        }
+        const teacher = new Teacher('云柱', '数据结构与算法')
+        console.log(teacher)
+        teacher.teach()
+    </script>
+</body>
+</html>
