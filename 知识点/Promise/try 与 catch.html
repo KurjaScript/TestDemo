@@ -1,0 +1,21 @@
+<script type="text/javascript">
+// 普通的，同步的异常捕获 
+// try  {
+//     throw new Error(666)
+// } catch (err) {
+//     console.error(err)
+// }
+
+// Promise 的异步的异常捕获
+async function fn1() {
+    let n = Promise.reject('拒绝')
+    console.log(n)
+    try {
+        await n
+    } catch(err) {
+        console.error('err', err)
+    }
+}
+fn1()
+
+</script>
