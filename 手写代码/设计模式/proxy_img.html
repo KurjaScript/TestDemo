@@ -1,4 +1,4 @@
-<script>
+<!-- <script>
   // proxy: http://img.lanrentuku.com/img/allimg/1212/5-121204193R0.gif
   // origin: https://www.baidu.com/img/bd_logo1.png
   window.onload = function () {
@@ -22,5 +22,36 @@
     })()
     // 把真实图片地址给 myImage 对象
     myImage.setSrc("https://www.baidu.com/img/bd_logo1.png") // 真实图片地址
+  }
+</script> -->
+<script>
+  // 使用代理模式解决图片懒加载
+  window.onload = function () {
+    // 真实对象、闭包
+    let myImage = (() => {
+      let imgNode = document.createElement('img')
+      document.body.appendChild(imgNode)
+      return {
+        setSrc: (src) => {
+          imgNode.src = src
+        }
+      }
+    })()
+    // 代理对象
+    let ProxyImage = (() => {
+      let img = new Image() // 内存中的一个图片对象，代理 拉取真实图片
+      img.onload = () => { // 加载完毕后触发该方法
+        setTimeout(() =>)
+        myImage.setSrc(img.src) // this 指向 img
+      }
+      return {
+        setSrc: (src) => {
+          myImage.setSrc("http://img.lanrentuku.com/img/allimg/1212/5-121204193R0.gif")
+          img.src = src
+        }
+      }
+    })()
+    // 调用 给代理对象设置真实图片
+    ProxyImage.setSrc("https://www.baidu.com/img/bd_logo1.png")
   }
 </script>
