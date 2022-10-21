@@ -1,0 +1,98 @@
+<script>
+  // 链表：JS 的实现方法
+  // js 数组有个坑，由于 js 数组中可以放不同类型的数据，没有限制，只有在放的数据都是 number 类型时，才和 java 的语言一样有连续地址，混杂数据时是个换皮的对象
+  // 1. 单向链表：线性的数据结构
+  // 每一个元素都需要通过 Node 来包装
+  class Node {
+    constructor(element) {
+      this.element = element // 每一个元素储存的 data
+      this.next = null // 每一个元素的 next 指针
+    }
+  }
+  class LinkedList {
+    constructor() {
+      this.size = 0 // 初始长度为 0
+      this.head = null // 头指针为null（空链表）
+    }
+    // 添加元素
+    append (element) {
+      let node = new Node(element)
+      if (this.head === null) {
+        this.head = node
+      } else {
+        let current = this.getNode(this.size - 1)
+        current.next = node
+      }
+      this.size++
+    }
+    // 插入元素
+    insert (position, element) {
+      if (position < 0 || position > this.size) {
+        throw new Error('position out range')
+      }
+      let node = new Node(element)
+      if (position === 0) {
+        node.next = this.head
+        this.head = node
+      } else {
+        let pre = this.getNode(position - 1)
+        let current = this.getNode(position)
+        pre.next = node
+        node.next = current
+      }
+      this.size++
+    }
+    // 删除指定项的元素
+    remove (position) {
+      if (position < 0 || position >= this.size) {
+        throw new Error('position out range')
+      }
+      let current = this.head
+      if (position === 0) {
+        this.head = current.next
+      } else {
+        let pre = this.getNode(position - 1)
+        current = pre.next
+        pre.next = current.next
+      }
+      this.size--
+    }
+    // 根据元素查找索引
+    indexOf (element) {
+      let current = this.head
+      for (let i = 0; i < this.size; i++) {
+        if (current.element === element) {
+          return i
+        }
+        current = current.next
+      }
+      return -1
+    }
+
+    // 根据索引查找元素
+    getNode (index) {
+      if (index < 0 || index >= this.size) {
+        throw new Error("out range")
+      }
+      let current = this.head
+      for (let i = 0; i < index; i++) {
+        current = current.next
+      }
+      return current
+    }
+  }
+  let ll = new LinkedList
+  ll.append(1)
+  ll.append(2)
+  ll.append(3)
+  ll.append(4)
+  ll.insert(2, 7)
+  ll.remove(1)
+  console.log('单向链表', ll)
+  console.log(ll.indexOf(3))
+  // 2. 双向链表：
+  // 3. 单向循环链表
+  // 4. 双向循环链表
+  // 5. 环形链表
+
+</script>
