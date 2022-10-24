@@ -6,7 +6,7 @@
 </div>
 <script type="text/javascript">
   // DOM 的更新是异步的，当数据发生变化，Vue 会把更新 DOM 缓存在一个事件队列当中，这样做是为了避免不要的 DOM 操作，比如重复点击；
-  // this.nextTick(callback),当数据更新时，在 DOM 渲染之后，会自动执行 callback 函数
+  // this.nextTick(callback),当数据更新时，在 DOM 渲染之后，会自动执行 callback 函数(相当于自动更新一次DOM)
   Vue.createApp({
     data () {
       return {
@@ -18,7 +18,7 @@
         this.msg = '我现在是火柱！'
         console.log(this.$refs['ref_p'].innerHTML) // '我是云柱，从事前端开发'
         this.$nextTick(() => {
-          console.log(this.$refs['ref_p'].innerHTML) // '我是云柱，从事前端开发'
+          console.log(this.$refs['ref_p'].innerHTML) // '我现在是火柱！'
         })
       }
     }
