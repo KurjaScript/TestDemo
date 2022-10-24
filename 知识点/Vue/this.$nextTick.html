@@ -1,0 +1,26 @@
+<meta charset="utf-8" />
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+<div id="app">
+  <p ref='ref_p'>{{msg}}</p>
+  <input @click="msgFn" type="button" value="按钮" />
+</div>
+<script type="text/javascript">
+  // DOM 的更新是异步的，当数据发生变化，Vue 会把更新 DOM 缓存在一个事件队列当中，这样做是为了避免不要的 DOM 操作，比如重复点击；
+  // this.nextTick(callback),当数据更新时，在 DOM 渲染之后，会自动执行 callback 函数
+  Vue.createApp({
+    data () {
+      return {
+        msg: '我是云柱，从事前端开发'
+      }
+    },
+    methods: {
+      msgFn () {
+        this.msg = '我现在是火柱！'
+        console.log(this.$refs['ref_p'].innerHTML) // '我是云柱，从事前端开发'
+        this.$nextTick(() => {
+          console.log(this.$refs['ref_p'].innerHTML) // '我是云柱，从事前端开发'
+        })
+      }
+    }
+  }).mount('#app')
+</script>
