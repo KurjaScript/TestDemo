@@ -1,0 +1,37 @@
+<meta charset="utf-8" />
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+<div id="app">
+  <!-- 该写法性能消耗较大 -->
+  <!-- <h1 v-for="item in arr" v-if="isTrue">{{item}}</h1> -->
+
+  <!-- 正确写法1 -->
+  <!-- <div v-if="isTrue">
+    <h1 v-for="item in arr">{{item}}</h1>
+  </div> -->
+
+  <!-- 正确写法2 -->
+  <template v-if="isTrue">
+    <h1 v-for="item in arr">{{item}}</h1>
+  </template>
+
+</div>
+<script type="text/javascript">
+  // v-if 和 v-for 不能同时使用的原因：
+  // 1. v-for 优先级高；
+  // 2. 每一次循环都执行一次 v-if，会造成性能浪费
+
+  // 解决方案：
+  // 1. 把 v-if 写在外层 DOM 中
+  // 2. 把 v-if写在外层 template 中... 更多，比如组件，但类似
+  Vue.createApp({
+    data () {
+      return {
+        arr: ['云柱', '火柱', 'Kurja', 'Sophia'],
+        isTrue: true
+      }
+    },
+    methods: {
+
+    }
+  }).mount('#app')
+</script>
